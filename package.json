@@ -1,7 +1,7 @@
 {
   "name": "cra-complex-browserext-boilerplate",
   "version": "0.1.0",
-  "description": "A boilerplate for complex Chrome/Firefox/(any Chromium-based browser) extension bootstrapped with Create React App",
+  "private": true,
   "dependencies": {
     "react": "^16.12.0",
     "react-dom": "^16.12.0",
@@ -13,7 +13,7 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-app-rewired build",
-    "test": "react-app-rewired test",
+    "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {

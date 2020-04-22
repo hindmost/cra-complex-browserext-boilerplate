@@ -3,14 +3,8 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const ManifestPlugin = require('webpack-manifest-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
-// Export override function(s) via object
-module.exports = {
-  webpack: override,
-  // You may also override the Jest config (used for tests) by adding property with 'jest' name below. See react-app-rewired library's docs for details
-};
-
-// Function to override the CRA webpack config
-function override(config, env) {
+// Export function to override the CRA webpack config
+module.exports = function override(config, env) {
   // Replace single entry point in the config with multiple ones
   // Note: you may remove any property below except "popup" to exclude respective entry point from compilation
   config.entry = {
@@ -41,15 +35,14 @@ function override(config, env) {
     minifyCSS: true,
     minifyURLs: true,
   };
-  const isEnvProduction = env === 'production';
   
   // Custom HtmlWebpackPlugin instance for index (popup) page
   const indexHtmlPlugin = new HtmlWebpackPlugin({
     inject: true,
-    chunks: ['popup'],
     template: paths.appHtml,
     filename: 'popup.html',
-    minify: isEnvProduction && minifyOpts,
+    chunks: ['popup'],
+    minify: minifyOpts,
   });
   // Replace origin HtmlWebpackPlugin instance in config.plugins with the above one
   config.plugins = replacePlugin(config.plugins,
@@ -59,10 +52,10 @@ function override(config, env) {
   // Extra HtmlWebpackPlugin instance for options page
   const optionsHtmlPlugin = new HtmlWebpackPlugin({
     inject: true,
-    chunks: ['options'],
     template: paths.appPublic + '/options.html',
     filename: 'options.html',
-    minify: isEnvProduction && minifyOpts,
+    chunks: ['options'],
+    minify: minifyOpts,
   });
   // Add the above HtmlWebpackPlugin instance into config.plugins
   // Note: you may remove/comment the next line if you don't need an options page
@@ -92,7 +85,7 @@ function override(config, env) {
   );
 
   return config;
-}
+};
 
 // Utility function to replace/remove specific plugin in a webpack config
 function replacePlugin(plugins, nameMatcher, newPlugin) {
